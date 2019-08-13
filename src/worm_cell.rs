@@ -6,6 +6,7 @@ pub struct WormCell<T: Sized> {
     value: Box<UnsafeCell<Option<T>>>
 }
 
+#[derive(Debug, Copy, Clone)]
 pub struct WormCellReader<T: Sized> {
     value: *const Option<T>
 }
