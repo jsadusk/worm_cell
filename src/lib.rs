@@ -17,11 +17,11 @@ pub struct WormCell<T: Sized> {
     value: Box<UnsafeCell<Option<T>>>
 }
 
-pub struct WormCellReader<'a, T: Sized> {
-    value: &'a Option<T>
+pub struct WormCellReader<T: Sized> {
+    value: *const Option<T>
 }
 
-impl<'a, T> WormCell<T> {
+impl<T> WormCell<T> {
     pub fn new() -> Self {
         WormCell { value: Box::new(UnsafeCell::<Option<T>>::new(None)) }
     }
@@ -40,8 +40,8 @@ impl<'a, T> WormCell<T> {
         }
     }
 
-    pub fn reader(&self) -> WormCellReader<'a, T> {
-        WormCellReader::<'a, T> { value: unsafe { &*self.value.get() } }
+    pub fn reader(&self) -> WormCellReader<T> {
+        WormCellReader::<T> { value: self.value.get() }
     }
 
     pub fn is_set(&self) -> bool {
@@ -56,9 +56,9 @@ impl<'a, T> WormCell<T> {
     }
 }
 
-impl<'a, T> WormCellReader<'a, T> {
-    pub fn get(&self) -> WormCellResult<&'a T> {
-        match self.value {
+impl<T> WormCellReader<T> {
+    pub fn get(&self) -> WormCellResult<&T> {
+        match unsafe { &*self.value } {
             Some(ref val) => Ok(val),
             None => Err(WormCellError::ReadNotSet)
         }
