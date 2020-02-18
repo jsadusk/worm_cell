@@ -8,6 +8,7 @@ use std::ops::Deref;
 
 use crate::error::*;
 
+#[derive(Debug)]
 pub struct AtomicWormCell<T: Sized> {
     set_started: AtomicBool,
     set_completed: AtomicBool,
@@ -16,14 +17,17 @@ pub struct AtomicWormCell<T: Sized> {
 
 unsafe impl<T> Sync for AtomicWormCell<T> {}
 
+#[derive(Debug)]
 pub struct WormCell<T: Sized> {
     value: UnsafeCell<(bool, MaybeUninit<T>)>
 }
 
+#[derive(Debug, Clone)]
 pub struct AtomicWormCellReader<T: Sized> {
     wc: Arc<AtomicWormCell<T>>
 }
 
+#[derive(Debug, Clone)]
 pub struct WormCellReader<T: Sized> {
     wc: Rc<WormCell<T>>
 }
