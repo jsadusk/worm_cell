@@ -33,6 +33,19 @@ mod test {
     }
 
     #[test]
+    fn one_reader_vec() {
+        let worm = Rc::new(WormCell::<Vec<i32>>::new());
+        assert!(!worm.is_set());
+        let reader = WormCellReader::new(worm.clone());
+        assert!(!worm.is_set());
+
+        worm.set(vec!(5, 6, 7));
+        assert!(worm.is_set());
+
+        assert_eq!(*reader.get(), vec!(5, 6, 7));
+    }
+
+    #[test]
     fn multi_reader() {
         let worm = Rc::new(WormCell::<i32>::new());
         assert!(!worm.is_set());
@@ -112,5 +125,18 @@ mod test {
         assert!(worm.is_set());
 
         assert_eq!(*reader.get(), 5);
+    }
+    #[test]
+
+    fn atomic_one_reader_vec() {
+        let worm = Arc::new(AtomicWormCell::<Vec<i32>>::new());
+        assert!(!worm.is_set());
+        let reader = AtomicWormCellReader::new(worm.clone());
+        assert!(!worm.is_set());
+
+        worm.set(vec!(5, 6, 7));
+        assert!(worm.is_set());
+
+        assert_eq!(*reader.get(), vec!(5, 6, 7));
     }
 }

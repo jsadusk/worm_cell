@@ -47,9 +47,7 @@ impl<T: Sized> AtomicWormCell<T> {
         }
 
         unsafe {
-            let maybe = &mut *self.value.get();
-            let dest = &mut *maybe.as_mut_ptr();
-            *dest = val;
+            (*self.value.get()).as_mut_ptr().write(val);
         }
 
         self.set_completed.store(true, Ordering::Relaxed);
@@ -61,9 +59,7 @@ impl<T: Sized> AtomicWormCell<T> {
         }
 
         unsafe {
-            let maybe = &mut *self.value.get();
-            let dest = &mut *maybe.as_mut_ptr();
-            *dest = val;
+            (*self.value.get()).as_mut_ptr().write(val);
         }
 
         self.set_completed.store(true, Ordering::Relaxed);
