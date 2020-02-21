@@ -109,9 +109,7 @@ impl<T: Sized> WormCell<T> {
                 panic!(WormCellError::ReadNotSet);
             }
             
-            let dest = &mut *maybe.1.as_mut_ptr();
-                
-            *dest = val;
+            maybe.1.as_mut_ptr().write(val);
 
             maybe.0 = true;
         }
@@ -124,9 +122,7 @@ impl<T: Sized> WormCell<T> {
                 return Err(WormCellError::ReadNotSet);
             }
             
-            let dest = &mut *maybe.1.as_mut_ptr();
-                
-            *dest = val;
+            maybe.1.as_mut_ptr().write(val);
 
             maybe.0 = true;
         }
